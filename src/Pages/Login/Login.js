@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../contexts/AuthProvider/AuthProvider';
 
 const Login = () => {
 
@@ -8,8 +9,32 @@ const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
 
 
-    const handleSignup = () => {
+    const {logIn, googleLogIn} = useContext(AuthContext)
 
+    const [loginError, setLoginError] = useState('')
+    const [logInUserEmail, setLogInUserEmail] = useState('')
+    // const [token] = useToken(logInUserEmail)
+    const location = useLocation()
+    const navigate = useNavigate()
+
+    const from = location.state?.from?.pathname || '/'
+
+
+    const handleLogin = data =>{
+        console.log(data)
+        setLoginError('')
+        
+        logIn(data.email, data.password)
+        .then(result => {
+            const user = result.user
+            console.log(user)
+            setLogInUserEmail(data.email)
+           
+        })
+        .catch(err => {
+            console.error(err.message)
+            setLoginError(err.message)
+        })
     }
 
 
@@ -20,7 +45,7 @@ const Login = () => {
             <div className='border-2 p-7 rounded-xl shadow-lg w-96'>
                 <h2 className='text-2xl text-center'>Login</h2>
 
-                <form onSubmit={handleSubmit(handleSignup)}>
+                <form onSubmit={handleSubmit(handleLogin)}>
                    
 
                     <div className="form-control w-full max-w-xs">

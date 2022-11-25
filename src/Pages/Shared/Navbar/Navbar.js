@@ -1,13 +1,28 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../../../contexts/AuthProvider/AuthProvider';
 
 const Navbar = () => {
 
+    const { user, logOut } = useContext(AuthContext)
+
+    const handleLogOut = () => {
+        logOut()
+            .then(() => { })
+            .catch(err => console.error(err))
+    }
 
     const menuItems = <>
         <li><Link to='/'>Home</Link></li>
-        <li><Link to='/login'>Login</Link></li>
-        <li><Link to='/signup'>Signup</Link></li>
+
+        {
+            user?.uid ? <>
+            <li><Link to='/dashboard'>Dashboard</Link></li>
+            <li><button onClick={handleLogOut}>LogOut</button></li>
+            </>
+            :
+            <li><Link to='/login'>Login</Link></li>
+        }
 
     </>
 
@@ -31,7 +46,7 @@ const Navbar = () => {
                     {menuItems}
                 </ul>
             </div>
-            
+
 
             {/* dashboard drawer  */}
             {/* <label tabIndex={2} htmlFor='dashboard-drawer' className="btn btn-ghost lg:hidden">

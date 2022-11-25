@@ -1,14 +1,67 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../contexts/AuthProvider/AuthProvider';
+import useToken from '../../hocks/useToken';
 
 const Signup = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
 
+    const {createUser, updateUser} = useContext(AuthContext)
+    const [signUpError, setSignUpError] = useState('')
+    const [createdUserEmail, setCreatedUserEmail] = useState('')
 
-    const handleSignup = () => {
+    const [token] = useToken(createdUserEmail)
+    const navigate = useNavigate()
 
+    if(token){
+        navigate('/')
     }
+
+    const handleSignup = (data) => {
+        console.log(data)
+        setSignUpError('')
+        console.error(errors)
+        createUser(data.email, data.password)
+            .then(result => {
+                const user = result.user
+                console.log(user)
+                toast.success('Account create Successfully')
+                const userInfo = {
+                    displayName: data.name,
+                    allUser: data.allUser
+                }
+                updateUser(userInfo)
+                    .then(() => {
+                        saveUser(data.name, data.email, data.allUsers)
+                    })
+                    .catch(err => console.error(err))
+
+            })
+            .catch(err => {
+                setSignUpError(err.message)
+                console.error(err)
+            })
+    }
+
+
+    const saveUser = (name, email, allUsers) => {
+        const user = { name, email , allUsers }
+        fetch('http://localhost:5000/users', {
+            method: "POST",
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        })
+            .then(res => res.json())
+            .then(data => {
+                setCreatedUserEmail(email)
+            })
+    }
+
+
 
     return (
         <div className='h-[800px] flex justify-center items-center '>
@@ -67,18 +120,15 @@ const Signup = () => {
 
                     <div className="form-control w-full max-w-xs">
                         <label className="label">
-                            <span className="label-text">Users Selection</span>
+                            <span className="label-text">AllUsers</span>
                         </label>
-
                         <select className="select select-bordered w-full max-w-xs"
-                        {...register("allUser", { required: 'allUser is requred' })}
+                        {...register("allUsers", { required: "allUsers is requred" })}
                         >
-                            
-                            <option>Seller</option>
                             <option>Buyer</option>
+                            <option>Seller</option>
                         </select>
-                        {errors.allUser && <p role='alert' className='text-red-500'>{errors.allUser.message}</p>}
-
+                        {errors.allUsers && <p role='alert' className='text-red-500'>{errors.allUsers.message}</p>}
                     </div>
 
 
