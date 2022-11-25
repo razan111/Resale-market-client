@@ -1,39 +1,15 @@
-import React, { useContext, useState } from 'react';
-import { useForm } from "react-hook-form";
-import toast from 'react-hot-toast';
+import React from 'react';
+import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import { AuthContext } from '../../contexts/AuthProvider';
 
 const Signup = () => {
-
     const { register, handleSubmit, formState: { errors } } = useForm();
 
-    const [signUpErr , setSignUpErr] = useState('')
 
-    const {createUser, updateUser} = useContext(AuthContext)
-
-
-    const handleSignup = (data) => {
-        // console.log(data)
-        setSignUpErr('')
-        createUser(data.email, data.password)
-        .then(result =>{
-            const user = result.user
-            console.log(user)
-            toast.success('New user create done')
-            const userInfo = {
-                displayName: data.name
-            }
-            updateUser(userInfo)
-            .then(() => {})
-            .catch(err => console.error(err))
-        })
-        .catch(err => {
-            console.error(err)
-            setSignUpErr(err.message)
-        })
+    const handleSignup = () => {
 
     }
+
     return (
         <div className='h-[800px] flex justify-center items-center '>
 
@@ -76,19 +52,38 @@ const Signup = () => {
                         </label>
 
                         <input type='password'
-                            {...register("password", { required: 'password is requred', 
-                            minLength: {value: 8, message: 'Password mustbe 8 char'},
-                            pattern: {value: /(?=.*[A-Z])(?=.*[!@#$%])(?=.*[0-9])/, message: 'Password must be Strong'}
-                         })}
+                            {...register("password", {
+                                required: 'password is requred',
+                                minLength: { value: 8, message: 'Password mustbe 8 char' },
+                                pattern: { value: /(?=.*[A-Z])(?=.*[!@#$%])(?=.*[0-9])/, message: 'Password must be Strong' }
+                            })}
                             className="input input-bordered w-full max-w-xs" />
 
                         {errors.password && <p role='alert' className='text-red-500'>{errors.password.message}</p>}
 
                     </div>
 
+                    {/* select  */}
+
+                    <div className="form-control w-full max-w-xs">
+                        <label className="label">
+                            <span className="label-text">Users Selection</span>
+                        </label>
+
+                        <select className="select select-bordered w-full max-w-xs"
+                        {...register("allUser", { required: 'allUser is requred' })}
+                        >
+                            
+                            <option>Seller</option>
+                            <option>Buyer</option>
+                        </select>
+                        {errors.allUser && <p role='alert' className='text-red-500'>{errors.allUser.message}</p>}
+
+                    </div>
+
 
                     <input className='btn btn-accent w-full mt-5' value='Signup' type="submit" />
-                    {signUpErr && <p className='text-red-600'>{signUpErr}</p>}
+
                 </form>
 
                 <p className='text-center my-2'>Already have an account <Link to='/login' className='underline text-blue-600'>Login</Link></p>
