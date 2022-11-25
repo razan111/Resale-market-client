@@ -1,14 +1,68 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { Link, useNavigate } from 'react-router-dom';
 
 const AddProduct = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
 
+    const navigate = useNavigate()
+
+
+    const imageHostKey = process.env.REACT_APP_imgbb_key;
+    // console.log(imageHostKey)
 
 
     const handleAddProduct = (data) => {
         console.log(data)
+        const image = data.image[0]
+        const formData = new FormData()
+        formData.append('image', image)
+        const url = `https://api.imgbb.com/1/upload?expiration=600&key=${imageHostKey}`
+
+        fetch(url, {
+            method: "POST",
+            body: formData
+        })
+        .then(res => res.json())
+        .then(imgData =>{
+            console.log(imgData)
+
+            if(imgData.success){
+                console.log(imgData.data.url)
+
+                const product = {
+                    productName: data.productName,
+                    price: data.price,
+                    conditionType: data.conditionType,
+                    number: data.number,
+                    location: data.location,
+                    productCategory: data.productCategory,
+                    purchase: data.purchase,
+                    oldPrice: data.oldPrice,
+                    image: imgData.data.url
+
+                }
+
+                // save product information to the db
+                fetch('http://localhost:5000/products', {
+                    method: "POST",
+                    headers: {
+                        'content-type': 'application/json',
+                        authorization: `bearer ${localStorage.getItem('accessToken')}`
+                    },
+                    body: JSON.stringify(product)
+                })
+                .then(res => res.json())
+                .then(result =>{
+                    console.log(result)
+                    toast.success(`${data.productName} added successfully`)
+                    navigate('/')
+                })
+            }
+        })
+
+
     }
     return (
         <div>
