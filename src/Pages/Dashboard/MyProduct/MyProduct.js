@@ -31,6 +31,7 @@ const MyProduct = () => {
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
 
                 {
+                  products &&
                     products.map(product => <div className="card  bg-base-100 shadow-xl">
                     <figure><img className='h-80 w-full object-cover' src={product.image} alt="Shoes" /></figure>
                     <div className="card-body">
