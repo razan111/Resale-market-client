@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import React, { useContext } from 'react';
-import Spiner from '../../../components/Spiner/Spiner';
+import { Link } from 'react-router-dom';
 import { AuthContext } from '../../../contexts/AuthProvider/AuthProvider';
 
-const MyProduct = () => {
+const Products = () => {
 
-  const {user} = useContext(AuthContext)
+    const {user} = useContext(AuthContext)
   const email = user?.email
 
-    const {data: products, isLoading} = useQuery({
+    const {data: products} = useQuery({
         queryKey: ['porducts'],
         queryFn: async () =>{
             try{
@@ -28,10 +28,6 @@ const MyProduct = () => {
         }
     })
 
-
-    if(isLoading){
-      return <Spiner></Spiner>
-    }
     return (
         <div>
             <h2>My Product: {products?.length}</h2>
@@ -60,7 +56,17 @@ const MyProduct = () => {
                       </div>
                       <div className="card-actions justify-end">
                         <div className="badge badge-outline">Fashion</div> 
-                        <div className="badge badge-outline">Buy</div>
+                        {/* <div className="badge badge-outline">Buy Now</div> */}
+
+                        {
+                            product.price && !product.paid && 
+                            <Link to={`/payment/${product._id}`}>
+                            <button className='btn btn-outline btn-xs'>Buy NOw</button>
+                            </Link>
+                        }
+                        {
+                            product.price && product.paid && <span>Paid</span>
+                        }
                       </div>
                     </div>
                   </div>)
@@ -71,4 +77,4 @@ const MyProduct = () => {
     );
 };
 
-export default MyProduct;
+export default Products;

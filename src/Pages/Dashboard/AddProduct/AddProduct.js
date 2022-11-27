@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../../contexts/AuthProvider/AuthProvider';
 
 const AddProduct = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
 
     const navigate = useNavigate()
+
+    const {user} = useContext(AuthContext)
 
 
     const imageHostKey = process.env.REACT_APP_imgbb_key;
@@ -32,6 +35,7 @@ const AddProduct = () => {
                 console.log(imgData.data.url)
 
                 const product = {
+                    email: user.email,
                     productName: data.productName,
                     price: data.price,
                     conditionType: data.conditionType,
@@ -226,7 +230,7 @@ const AddProduct = () => {
                         </div>
 
 
-                        <input className='btn btn-accent w-full mt-5' value='Login' type="submit" />
+                        <input className='btn btn-accent w-full mt-5' value='Add Product' type="submit" />
 
                     </form>
                 </div>

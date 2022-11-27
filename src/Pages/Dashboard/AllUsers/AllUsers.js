@@ -1,10 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
-import React from 'react';
+import React, { useState } from 'react';
 import toast from 'react-hot-toast';
+import Spiner from '../../../components/Spiner/Spiner';
+import ConfirmationModal from '../../Shared/ConfirmationModal/ConfirmationModal';
 
 const AllUsers = () => {
 
-    const { data: users = [] , refetch} = useQuery({
+    const [deletingUser, setDeletingUser] = useState(null)
+    const closeModal = () =>{
+        setDeletingUser(null)
+    }
+
+
+
+    const { data: users = [],isLoading , refetch } = useQuery({
         queryKey: ['users'],
         queryFn: async () => {
             const res = await fetch('http://localhost:5000/users')
@@ -13,24 +22,48 @@ const AllUsers = () => {
         }
     })
 
+    const handleDeleteUser = (user) =>{
+        // console.log(user)
+        fetch(`http://localhost:5000/users/${user._id}`, {
+            method: "DELETE",
+            headers: {
+                authorization: `bearer ${localStorage.getItem('accessToken')}`
+            }
+        })
+        .then(res => res.json())
+        .then(data =>{
 
-    const handleMakeAdmin = (id) =>{
-        fetch(`http://localhost:5000/users/admin/${id}`,{
+            if(data.deletedCount > 0){
+                console.log(data)
+                toast.success(`Deleted ${user.name} ${user.allUsers} successfully`)
+                refetch()
+            }
+            
+        })
+    }
+
+
+    const handleMakeAdmin = (id) => {
+        fetch(`http://localhost:5000/users/admin/${id}`, {
             method: "PUT",
             headers: {
                 authorization: `bearer ${localStorage.getItem('accessToken')}`
             }
 
         })
-        .then(res =>res.json())
-        .then(data =>{
-            console.log(data)
-            if(data.modifiedCount > 0){
-                toast.success('Make admin successful')
-                refetch()
-            }
-            
-        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                if (data.modifiedCount > 0) {
+                    toast.success('Make admin successful')
+                    refetch()
+                }
+
+            })
+    }
+
+    if(isLoading){
+        return <Spiner></Spiner>
     }
 
     return (
@@ -53,25 +86,40 @@ const AllUsers = () => {
                     </thead>
                     <tbody>
                         {
-                            users.map((user, i) => 
+                            users.map((user, i) =>
                                 <tr key={user._id}
-                                 className="hover">
-                                    <th>{i+1}</th>
+                                    className="hover">
+                                    <th>{i + 1}</th>
                                     <td>{user.name}</td>
                                     <td>{user.email}</td>
                                     <td>{user.allUsers}</td>
                                     <td>
-                                        { user?.role !== 'Admin' && 
-                                            <button className='btn btn-xs' onClick={() => handleMakeAdmin(user._id)}>Make Admin</button> 
+                                        {user?.role !== 'Admin' &&
+                                            <button className='btn btn-xs' onClick={() => handleMakeAdmin(user._id)}>Make Admin</button>
                                         }
-                                        
+
                                     </td>
-                                    <td><button className='btn btn-xs bg-red-600'>Delete</button></td>
+                                    <td>
+                                        <label  
+                                        onClick={() =>setDeletingUser(user)}
+                                         htmlFor="confirmation_modal" className="btn btn-xs bg-red-600">Delete</label>
+                                    </td>
                                 </tr>)
                         }
                     </tbody>
                 </table>
             </div>
+
+            {
+                deletingUser && <ConfirmationModal
+                title={`Are you sure you want to delete...`}
+                message={`If you delete ${deletingUser.name}`}
+                successAction = {handleDeleteUser}
+                modalData = {deletingUser}
+                closeModal={closeModal}
+                successButtonName= "Delete"
+                ></ConfirmationModal>
+            }
         </div>
     );
 };

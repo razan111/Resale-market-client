@@ -5,6 +5,7 @@ import AddProduct from "../pages/Dashboard/AddProduct/AddProduct";
 import AllUsers from "../pages/Dashboard/AllUsers/AllUsers";
 import MyProduct from "../pages/Dashboard/MyProduct/MyProduct";
 import Home from "../pages/Home/Home/Home";
+import Payment from "../pages/Home/Payment/Payment";
 import Login from "../pages/Login/Login";
 import Signup from "../pages/Signup/Signup";
 import AdminRoutes from "./AdminRoute/AdminRoutes";
@@ -27,22 +28,29 @@ export const router = createBrowserRouter([
             {
                 path: '/login',
                 element: <Login></Login>
-            }
+            },
+            // {
+            //     path: '/payment/:id',
+            //     element: <Payment></Payment>,
+            //     loader: ({params}) => fetch(`http://localhost:5000/products/${params.id}`)
+            // },
         ]
     },
     {
         path: '/dashboard',
         element: <Privateroute><Dashboardlayout></Dashboardlayout></Privateroute>,
         children: [
-            {
-                path: '/dashboard/addproduct',
-                element: <AddProduct></AddProduct>
-            },
 
             {
                 path: '/dashboard/myproduct',
                 element: <SellerRoutes><MyProduct></MyProduct></SellerRoutes>
             },
+            {
+                path: '/dashboard/addproduct',
+                element: <SellerRoutes><AddProduct></AddProduct></SellerRoutes>
+            },
+
+           
             {
                 path: '/dashboard/allusers',
                 element: <AdminRoutes><AllUsers/></AdminRoutes>
