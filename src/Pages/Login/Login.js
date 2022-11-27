@@ -84,10 +84,9 @@ const Login = () => {
                         {errors.password && <p role='alert' className='text-red-500'>{errors.password.message}</p>}
 
                     </div>
-
-                    
-
-
+                    {
+                        loginError && <p>{loginError}</p>
+                    }
                     <input className='btn btn-accent w-full mt-5' value='Login' type="submit" />
 
                 </form>

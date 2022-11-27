@@ -7,6 +7,9 @@ import MyProduct from "../pages/Dashboard/MyProduct/MyProduct";
 import Home from "../pages/Home/Home/Home";
 import Login from "../pages/Login/Login";
 import Signup from "../pages/Signup/Signup";
+import AdminRoutes from "./AdminRoute/AdminRoutes";
+import Privateroute from "./PrivateRoute/Privateroute";
+import SellerRoutes from "./SellerRoutes/SellerRoutes";
 
 export const router = createBrowserRouter([
     {
@@ -29,7 +32,7 @@ export const router = createBrowserRouter([
     },
     {
         path: '/dashboard',
-        element: <Dashboardlayout></Dashboardlayout>,
+        element: <Privateroute><Dashboardlayout></Dashboardlayout></Privateroute>,
         children: [
             {
                 path: '/dashboard/addproduct',
@@ -38,11 +41,11 @@ export const router = createBrowserRouter([
 
             {
                 path: '/dashboard/myproduct',
-                element: <MyProduct></MyProduct>
+                element: <SellerRoutes><MyProduct></MyProduct></SellerRoutes>
             },
             {
-                path: '/dashboard/users',
-                element: <AllUsers/>
+                path: '/dashboard/allusers',
+                element: <AdminRoutes><AllUsers/></AdminRoutes>
             },
         ]
     }
