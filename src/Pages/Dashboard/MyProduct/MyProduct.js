@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import React, { useContext } from 'react';
+import toast from 'react-hot-toast';
 import Spiner from '../../../components/Spiner/Spiner';
 import { AuthContext } from '../../../contexts/AuthProvider/AuthProvider';
 
@@ -8,7 +9,7 @@ const MyProduct = () => {
   const {user} = useContext(AuthContext)
   const email = user?.email
 
-    const {data: products, isLoading} = useQuery({
+    const {data: products, isLoading, refetch} = useQuery({
         queryKey: ['porducts'],
         queryFn: async () =>{
             try{
@@ -29,6 +30,23 @@ const MyProduct = () => {
     })
 
 
+    const handleAdvertise = (id) =>{
+      console.log(id)
+      fetch(`http://localhost:5000/products/seller/${id}`,{
+        method: "PUT"
+      })
+      .then(res => res.json())
+      .then(data => {
+
+        if(data.modifiedCount > 0){
+          toast.success(`Products is Advertised successfully`)
+          refetch()
+        }
+        
+      })
+    }
+
+
     if(isLoading){
       return <Spiner></Spiner>
     }
@@ -41,7 +59,7 @@ const MyProduct = () => {
 
                 {
                   products &&
-                    products.map(product => <div className="card  bg-base-100 shadow-xl">
+                    products.map(product => <div key={product._id} className="card  bg-base-100 shadow-xl">
                     <figure><img className='h-80 w-full object-cover' src={product.image} alt="Shoes" /></figure>
                     <div className="card-body">
                       <h2 className="card-title">
@@ -59,8 +77,12 @@ const MyProduct = () => {
                         <h2>Number: {product.number}</h2>
                       </div>
                       <div className="card-actions justify-end">
-                        <div className="badge badge-outline">Fashion</div> 
-                        <div className="badge badge-outline">Buy</div>
+                        
+                        { product?.roleModel !== 'Advertised' &&
+                          <button onClick={() => handleAdvertise(product._id)}
+                          className="badge badge-outline">Advertise</button>
+                        }
+                        <button  className="badge badge-outline">Buy</button>
                       </div>
                     </div>
                   </div>)

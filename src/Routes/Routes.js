@@ -3,6 +3,7 @@ import Dashboardlayout from "../layoyt/Dashboardlayout";
 import Main from "../layoyt/Main";
 import AddProduct from "../pages/Dashboard/AddProduct/AddProduct";
 import AllUsers from "../pages/Dashboard/AllUsers/AllUsers";
+import MyDashboard from "../pages/Dashboard/MyDashboard/MyDashboard";
 import MyProduct from "../pages/Dashboard/MyProduct/MyProduct";
 import Home from "../pages/Home/Home/Home";
 import Payment from "../pages/Home/Payment/Payment";
@@ -40,6 +41,10 @@ export const router = createBrowserRouter([
         path: '/dashboard',
         element: <Privateroute><Dashboardlayout></Dashboardlayout></Privateroute>,
         children: [
+            {
+                path: '/dashboard',
+                element: <MyDashboard></MyDashboard>
+            },
 
             {
                 path: '/dashboard/myproduct',
@@ -49,8 +54,6 @@ export const router = createBrowserRouter([
                 path: '/dashboard/addproduct',
                 element: <SellerRoutes><AddProduct></AddProduct></SellerRoutes>
             },
-
-           
             {
                 path: '/dashboard/allusers',
                 element: <AdminRoutes><AllUsers/></AdminRoutes>
