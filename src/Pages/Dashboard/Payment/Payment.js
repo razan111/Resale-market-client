@@ -1,8 +1,9 @@
 import React from 'react';
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData, useNavigation } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js'
 import { Elements } from '@stripe/react-stripe-js'
 import CheckoutForm from './CheckoutForm';
+import Spiner from '../../../components/Spiner/Spiner';
 
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRPIE_PK)
@@ -10,8 +11,12 @@ const stripePromise = loadStripe(process.env.REACT_APP_STRPIE_PK)
 console.log('stripe key', stripePromise)
 const Payment = () => {
     const order = useLoaderData();
+    const navigation = useNavigation()
     const {productName, price} = order;
     // console.log('orders data', order)
+    if(navigation.state === "loading"){
+        return <Spiner></Spiner>
+    }
     return (
         <div>
             <h2 className='text-3xl'>Payment for {productName}</h2>

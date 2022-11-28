@@ -11,7 +11,7 @@ const CheckoutForm = ({order}) => {
 
     const stripe = useStripe()
     const elements = useElements()
-    const {price, email} = order;
+    const {price, email, _id } = order;
 
     useEffect( () =>{
         fetch('http://localhost:5000/create-payment-intent',{
@@ -53,6 +53,9 @@ const CheckoutForm = ({order}) => {
             setCardError('');
         }
 
+        setSuccess('')
+        setProcessing(true)
+
         const { paymentIntent, error: confirmError } = await stripe.confirmCardPayment(
             clientSecret,
             {
@@ -77,9 +80,11 @@ const CheckoutForm = ({order}) => {
                 price,
                 transactionId: paymentIntent.id,
                 email,
-                // bookingId: _id
+                orderId: _id
+                
             }
-            fetch('https://doctors-portal-server-rust.vercel.app/payments', {
+            // setProcessing(false)
+            fetch('http://localhost:5000/payments', {
                 method: 'POST',
                 headers: {
                     'content-type': 'application/json',
@@ -123,7 +128,7 @@ const CheckoutForm = ({order}) => {
                 <button
                     className='btn btn-sm mt-4 btn-primary'
                     type="submit"
-                    disabled={!stripe || !clientSecret}>
+                    disabled={!stripe || !clientSecret || processing}>
                     Pay
                 </button>
             </form>
