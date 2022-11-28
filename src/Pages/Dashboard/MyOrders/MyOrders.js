@@ -1,5 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import React from 'react';
+import { Link } from 'react-router-dom';
+import Spiner from '../../../components/Spiner/Spiner';
 
 const MyOrders = () => {
 
@@ -23,6 +25,13 @@ const MyOrders = () => {
             }
         }
     })
+
+
+    // console.log(orders)
+
+    if(isLoading){
+        <Spiner></Spiner>
+    }
 
     return (
         <div>
@@ -66,7 +75,16 @@ const MyOrders = () => {
                                     <br />
                                     <span className="badge badge-ghost badge-sm">{order.price}</span>
                                 </td>
-                                <td><button className='btn btn-xs'>Pay</button></td>
+                                <td>
+                                    {
+                                        order.price && !order.paid && <Link to={`/dashboard/payment/${order._id}`}>
+                                        <button className='btn btn-xs'>Pay</button>
+                                        </Link>
+                                    }
+                                    {
+                                        order.price && order.paid && <span className='text-green-600'>Paid</span>
+                                    }
+                                </td>
                                 <th>
                                     <button className="btn btn-ghost btn-xs">Delete</button>
                                 </th>

@@ -15,8 +15,10 @@ const AdertisedModal = ({products, seetCurrentProduct}) => {
         const oldPrice = form.oldPrice.value;
         const location = form.location.value;
         const email = form.email.value;
+        const image = form.image.value;
 
         const ordersProduct = {
+            image,
             productName,
             price,
             oldPrice,
@@ -54,11 +56,12 @@ const AdertisedModal = ({products, seetCurrentProduct}) => {
             <div className="modal">
                 <div className="modal-box relative">
                     <label htmlFor="advertisedModal" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-                    <figure className='mb-4'>
-                        <img className='h-80 w-full object-cover rounded-lg' src={products.image} alt="" />
-                    </figure>
+                    
 
                     <form onSubmit={handleOrders}  className='grid grid-cols-1 gap-3'>
+                    <figure className='mb-4'>
+                        <img name='image' className='h-80 w-full object-cover rounded-lg' src={products.image} alt="" />
+                    </figure>
                     
 
                     <span>Model: <input name='productName' type="text" disabled defaultValue={products.productName}/></span>

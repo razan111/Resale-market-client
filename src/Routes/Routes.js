@@ -8,10 +8,11 @@ import AllUsers from "../pages/Dashboard/AllUsers/AllUsers";
 import MyDashboard from "../pages/Dashboard/MyDashboard/MyDashboard";
 import MyOrders from "../pages/Dashboard/MyOrders/MyOrders";
 import MyProduct from "../pages/Dashboard/MyProduct/MyProduct";
+import Payment from "../pages/Dashboard/Payment/Payment";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
 import Home from "../pages/Home/Home/Home";
-import Payment from "../pages/Home/Payment/Payment";
 import Login from "../pages/Login/Login";
+import DisplayError from "../pages/Shared/DisplayError/DisplayError";
 import Signup from "../pages/Signup/Signup";
 import AdminRoutes from "./AdminRoute/AdminRoutes";
 import Privateroute from "./PrivateRoute/Privateroute";
@@ -21,6 +22,7 @@ export const router = createBrowserRouter([
     {
         path: '/',
         element: <Main></Main>,
+        errorElement: <DisplayError></DisplayError>,
         children: [
             {
                 path: '/',
@@ -52,6 +54,7 @@ export const router = createBrowserRouter([
     {
         path: '/dashboard',
         element: <Privateroute><Dashboardlayout></Dashboardlayout></Privateroute>,
+        errorElement: <DisplayError></DisplayError>,
         children: [
             {
                 path: '/dashboard',
@@ -73,7 +76,12 @@ export const router = createBrowserRouter([
             {
                 path: '/dashboard/myorders',
                 element: <MyOrders></MyOrders>
-            }
+            },
+            {
+                path: '/dashboard/payment/:id',
+                element: <Payment></Payment>,
+                loader: ({params}) => fetch(`http://localhost:5000/orders/${params.id}`)
+            },
         ]
     },
     {
