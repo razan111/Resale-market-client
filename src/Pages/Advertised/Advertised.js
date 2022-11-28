@@ -1,8 +1,11 @@
+import { async } from '@firebase/util';
 import { useQuery } from '@tanstack/react-query';
-import React from 'react';
+import React, { useState } from 'react';
 import Spiner from '../../components/Spiner/Spiner';
+import AdertisedModal from './AdertisedModal';
 
 const Advertised = () => {
+    const [currentProduct, seetCurrentProduct] = useState(null)
     const { data: products, isLoading, refetch } = useQuery({
         queryKey: ['porducts'],
         queryFn: async () => {
@@ -23,9 +26,20 @@ const Advertised = () => {
         }
     })
 
-    if(isLoading){
+    // const [availableOrders, setAvailableOrders] = useState([])
+
+    // const {data: orders=[]} = useQuery({
+    //     queryKey: ['orders'],
+    //     queryFn: async() => {
+    //      const res = await fetch('http://localhost:3000/orders')
+    //      const data = await res.json()
+    //      return data;
+    //     }
+    // })
+
+    if (isLoading) {
         return <Spiner></Spiner>
-      }
+    }
 
 
     return (
@@ -54,16 +68,23 @@ const Advertised = () => {
                             <div className="card-actions justify-end">
 
 
-                                <button
-                                    className="badge badge-outline">Details</button>
+                            <label htmlFor="advertisedModal" className="btn btn-outline btn-xs"
+                            onClick={()=> seetCurrentProduct(product)}
+                            >Orders</label>
 
-                                <button className="badge badge-outline">Buy</button>
+                                <button  className="badge badge-outline">Buy</button>
                             </div>
                         </div>
                     </div>)
                 }
 
             </div>
+
+            {
+                currentProduct && <AdertisedModal
+                products={currentProduct}
+                ></AdertisedModal>
+            }
         </div>
     );
 };

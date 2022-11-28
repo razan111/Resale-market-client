@@ -15,12 +15,30 @@ const Signup = () => {
     const [token] = useToken(createdUserEmail)
     const navigate = useNavigate()
 
+    const imageHostKey = process.env.REACT_APP_imgbb_key;
+
     if(token){
         navigate('/')
     }
 
     const handleSignup = (data) => {
-        console.log(data)
+        const image = data.image[0]
+        const formData = new FormData()
+        formData.append('image', image)
+        const url = `https://api.imgbb.com/1/upload?key=${imageHostKey}`
+
+        fetch(url, {
+            method: "POST",
+            body: formData
+        })
+
+        .then(res => res.json())
+        .then(imgData =>{
+           console.log(imgData)
+        })
+
+
+        // console.log(data)
         setSignUpError('')
         console.error(errors)
         createUser(data.email, data.password)
@@ -30,7 +48,8 @@ const Signup = () => {
                 toast.success('Account create Successfully')
                 const userInfo = {
                     displayName: data.name,
-                    allUser: data.allUser
+                    allUser: data.allUser,
+                    image: data.url
                 }
                 updateUser(userInfo)
                     .then(() => {
@@ -46,8 +65,8 @@ const Signup = () => {
     }
 
 
-    const saveUser = (name, email, allUsers) => {
-        const user = { name, email , allUsers }
+    const saveUser = (name, email, allUsers, image) => {
+        const user = { name, email , allUsers, image }
         fetch('http://localhost:5000/users', {
             method: "POST",
             headers: {
@@ -129,6 +148,21 @@ const Signup = () => {
                             <option>Seller</option>
                         </select>
                         {errors.allUsers && <p role='alert' className='text-red-500'>{errors.allUsers.message}</p>}
+                    </div>
+
+                    {/* image  */}
+                    <div className="form-control w-full max-w-xs">
+                        <label className="label">
+                            <span className="label-text">Photo</span>
+
+                        </label>
+
+                        <input type='file'
+                            {...register("image", { required: 'image is requred' })}
+                            className="file-input file-input-bordered w-full max-w-xs" />
+
+                        {errors.image && <p role='alert' className='text-red-500'>{errors.image.message}</p>}
+
                     </div>
 
 

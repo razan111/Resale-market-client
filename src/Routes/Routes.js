@@ -2,10 +2,13 @@ import { createBrowserRouter } from "react-router-dom";
 import Dashboardlayout from "../layoyt/Dashboardlayout";
 import Main from "../layoyt/Main";
 import Advertised from "../pages/Advertised/Advertised";
+import Blog from "../pages/Blog/Blog";
 import AddProduct from "../pages/Dashboard/AddProduct/AddProduct";
 import AllUsers from "../pages/Dashboard/AllUsers/AllUsers";
 import MyDashboard from "../pages/Dashboard/MyDashboard/MyDashboard";
+import MyOrders from "../pages/Dashboard/MyOrders/MyOrders";
 import MyProduct from "../pages/Dashboard/MyProduct/MyProduct";
+import ErrorPage from "../pages/ErrorPage/ErrorPage";
 import Home from "../pages/Home/Home/Home";
 import Payment from "../pages/Home/Payment/Payment";
 import Login from "../pages/Login/Login";
@@ -35,6 +38,10 @@ export const router = createBrowserRouter([
                 path: '/advertised',
                 element: <Advertised></Advertised>
             },
+            {
+                path: '/blog',
+                element: <Blog></Blog>
+            },
             // {
             //     path: '/payment/:id',
             //     element: <Payment></Payment>,
@@ -63,6 +70,14 @@ export const router = createBrowserRouter([
                 path: '/dashboard/allusers',
                 element: <AdminRoutes><AllUsers/></AdminRoutes>
             },
+            {
+                path: '/dashboard/myorders',
+                element: <MyOrders></MyOrders>
+            }
         ]
+    },
+    {
+        path: '/*',
+        element: <ErrorPage></ErrorPage>
     }
 ])
