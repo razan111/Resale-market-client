@@ -1,10 +1,48 @@
 import React, { useContext } from 'react';
+import toast from 'react-hot-toast';
 import { AuthContext } from '../../contexts/AuthProvider/AuthProvider';
 
-const AdertisedModal = ({products}) => {
+const AdertisedModal = ({products, seetCurrentProduct}) => {
     const {user} = useContext(AuthContext)
 
     console.log(products)
+
+    const handleOrders  = (event) =>{
+        event.preventDefault()
+        const form = event.target;
+        const productName = form.productName.value;
+        const price = form.price.value;
+        const oldPrice = form.oldPrice.value;
+        const location = form.location.value;
+        const email = form.email.value;
+
+        const ordersProduct = {
+            productName,
+            price,
+            oldPrice,
+            location,
+            email
+        }
+
+        fetch('http://localhost:5000/orders', {
+            method: "POST",
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(ordersProduct)
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log(data)
+            if(data.acknowledged){
+                seetCurrentProduct(null)
+            toast.success('Ordered Confiremd')
+            }
+        })
+
+       
+
+    }
     
     return (
         <>
@@ -16,16 +54,25 @@ const AdertisedModal = ({products}) => {
             <div className="modal">
                 <div className="modal-box relative">
                     <label htmlFor="advertisedModal" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
-                    <figure>
+                    <figure className='mb-4'>
                         <img className='h-80 w-full object-cover rounded-lg' src={products.image} alt="" />
                     </figure>
-                    <h3 className="text-lg mt-2 font-bold">{products.productName}</h3>
-                    <p>Price: {products.price}</p>
-                    <p>Old Price: <del>{products.oldPrice}</del> </p>
-                    <p>Location: {products.location}</p>
-                    <p className='mb-3'>Email: {user.email}</p>
 
-                    <button className='btn btn-outline'>Buy Now</button>
+                    <form onSubmit={handleOrders}  className='grid grid-cols-1 gap-3'>
+                    
+
+                    <span>Model: <input name='productName' type="text" disabled defaultValue={products.productName}/></span>
+                    
+                    <span>Price: <input name='price' disabled defaultValue={products.price} type="number" /></span>
+                    <span>Old Price: <input name='oldPrice' disabled defaultValue={products.oldPrice} type="text" /></span>
+
+                    <span>Location: <input name='location' disabled defaultValue={products.location} type="text" /></span>
+                    <span>Email: <input name='email' disabled defaultValue={user.email} type="email" /></span>
+                    
+
+                    <input className='w-full btn btn-outline' type="submit" value="Orders" />
+
+                    </form>
                 </div>
             </div>
         </>

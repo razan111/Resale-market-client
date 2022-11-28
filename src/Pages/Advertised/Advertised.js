@@ -37,6 +37,8 @@ const Advertised = () => {
     //     }
     // })
 
+
+
     if (isLoading) {
         return <Spiner></Spiner>
     }
@@ -68,8 +70,11 @@ const Advertised = () => {
                             <div className="card-actions justify-end">
 
 
-                            <label htmlFor="advertisedModal" className="btn btn-outline btn-xs"
+                            <label
+                            disabled={product.availableProduct.length===0}
+                             htmlFor="advertisedModal" className="btn btn-outline btn-xs"
                             onClick={()=> seetCurrentProduct(product)}
+                            
                             >Orders</label>
 
                                 <button  className="badge badge-outline">Buy</button>
@@ -83,6 +88,7 @@ const Advertised = () => {
             {
                 currentProduct && <AdertisedModal
                 products={currentProduct}
+                seetCurrentProduct={seetCurrentProduct}
                 ></AdertisedModal>
             }
         </div>
