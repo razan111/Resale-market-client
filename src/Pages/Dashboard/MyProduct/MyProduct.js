@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { data } from 'autoprefixer';
 import React, { useContext } from 'react';
 import toast from 'react-hot-toast';
 import Spiner from '../../../components/Spiner/Spiner';
@@ -69,7 +70,7 @@ const MyProduct = () => {
                         {product.productName}
                         <div className="badge badge-secondary">{product.conditionType}</div>
                       </h2>
-                      <p>If a dog chews shoes whose shoes does he choose?</p>
+                      <p>{product?.description}</p>
 
                       <div className="card-actions justify-between">
                         <h2>Price: {product.price}</h2>
@@ -85,7 +86,7 @@ const MyProduct = () => {
                           <button onClick={() => handleAdvertise(product._id)}
                           className="badge badge-outline">Advertise</button>
                         }
-                        <button  className="badge badge-outline">Buy</button>
+                        
                       </div>
                     </div>
                   </div>)

@@ -35,7 +35,7 @@ const AllUsers = () => {
 
             if(data.deletedCount > 0){
                 console.log(data)
-                toast.success(`Deleted ${user.name} ${user.allUsers} successfully`)
+                toast.success(`Deleted ${user?.name} ${user?.allUsers} successfully`)
                 refetch()
             }
             
@@ -90,9 +90,9 @@ const AllUsers = () => {
                                 <tr key={user._id}
                                     className="hover">
                                     <th>{i + 1}</th>
-                                    <td>{user.name}</td>
-                                    <td>{user.email}</td>
-                                    <td>{user.allUsers}</td>
+                                    <td>{user?.name}</td>
+                                    <td>{user?.email}</td>
+                                    <td>{user?.allUsers}</td>
                                     <td>
                                         {user?.role !== 'Admin' &&
                                             <button className='btn btn-xs' onClick={() => handleMakeAdmin(user._id)}>Make Admin</button>

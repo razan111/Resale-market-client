@@ -1,19 +1,22 @@
+import { GoogleAuthProvider } from 'firebase/auth';
 import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../contexts/AuthProvider/AuthProvider';
 import useToken from '../../hocks/useToken';
 
 const Signup = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
 
-    const {createUser, updateUser} = useContext(AuthContext)
+    const {createUser, updateUser, googleLogIn } = useContext(AuthContext)
     const [signUpError, setSignUpError] = useState('')
     const [createdUserEmail, setCreatedUserEmail] = useState('')
 
     const [token] = useToken(createdUserEmail)
     const navigate = useNavigate()
+    
+    const location = useLocation();
 
     const imageHostKey = process.env.REACT_APP_imgbb_key;
 
@@ -79,6 +82,25 @@ const Signup = () => {
                 setCreatedUserEmail(email)
             })
     }
+
+    const googleProvider = new GoogleAuthProvider()
+ 
+
+    const from = location.state?.from?.pathname || '/'
+
+    const handleGoogleSignIn = (data) => {
+        googleLogIn(googleProvider)
+            .then(result => {
+                const user = result.user;
+                console.log(user)
+                saveUser(data.name, data.email, data.allUsers)
+                
+            })
+            .catch(error => console.error(error))
+    }
+
+
+    
 
 
 
@@ -174,7 +196,7 @@ const Signup = () => {
 
                 <div className="divider">OR</div>
 
-                <button className='btn btn-outline w-full'>Continue with google</button>
+                <button onClick={handleGoogleSignIn} className='btn btn-outline w-full'>Continue with google</button>
             </div>
 
         </div>
