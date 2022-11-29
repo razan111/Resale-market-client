@@ -1,9 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
-import React from 'react';
+import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import Spiner from '../../../components/Spiner/Spiner';
+import ConfirmationModal from '../../Shared/ConfirmationModal/ConfirmationModal';
 
 const MyOrders = () => {
+
+    const [deletingUser, setDeletingUser] = useState(null)
+    const closeModal = () =>{
+        setDeletingUser(null)
+    }
 
 
     const { data: orders, isLoading, refetch } = useQuery({
@@ -25,6 +32,26 @@ const MyOrders = () => {
             }
         }
     })
+
+    const handleDeleteUser = (orders) =>{
+        // console.log(user)
+        fetch(`http://localhost:5000/orders/${orders._id}`, {
+            method: "DELETE",
+            headers: {
+                authorization: `bearer ${localStorage.getItem('accessToken')}`
+            }
+        })
+        .then(res => res.json())
+        .then(data =>{
+
+            if(data.deletedCount > 0){
+                console.log(data)
+                toast.success(`Deleted ${orders.productName} successfully`)
+                refetch()
+            }
+            
+        })
+    }
 
 
     // console.log(orders)
@@ -48,7 +75,7 @@ const MyOrders = () => {
                             <th>Product Details</th>
                             <th>Pay</th>
                             <th>Delete</th>
-                            <th></th>
+                            
                         </tr>
                     </thead>
                     <tbody>
@@ -86,7 +113,9 @@ const MyOrders = () => {
                                     }
                                 </td>
                                 <th>
-                                    <button className="btn btn-ghost btn-xs">Delete</button>
+                                    <button className="btn btn-ghost btn-xs"><label  
+                                        onClick={() =>setDeletingUser(order)}
+                                         htmlFor="confirmation_modal" className="btn btn-xs bg-red-600">Delete</label></button>
                                 </th>
                             </tr>)
                         }
@@ -99,6 +128,17 @@ const MyOrders = () => {
 
                 </table>
             </div>
+
+            {
+                deletingUser && <ConfirmationModal
+                title={`Are you sure you want to delete...`}
+                message={`If you delete ${deletingUser.name}`}
+                successAction = {handleDeleteUser}
+                modalData = {deletingUser}
+                closeModal={closeModal}
+                successButtonName= "Delete"
+                ></ConfirmationModal>
+            }
 
         </div>
     );
