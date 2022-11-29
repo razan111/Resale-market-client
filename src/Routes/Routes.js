@@ -15,6 +15,7 @@ import Login from "../pages/Login/Login";
 import DisplayError from "../pages/Shared/DisplayError/DisplayError";
 import Signup from "../pages/Signup/Signup";
 import AdminRoutes from "./AdminRoute/AdminRoutes";
+import BuyerRoutes from "./BuyerRoutes/BuyerRoutes";
 import Privateroute from "./PrivateRoute/Privateroute";
 import SellerRoutes from "./SellerRoutes/SellerRoutes";
 
@@ -75,7 +76,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: '/dashboard/myorders',
-                element: <MyOrders></MyOrders>
+                element: <BuyerRoutes><MyOrders></MyOrders></BuyerRoutes>
             },
             {
                 path: '/dashboard/payment/:id',

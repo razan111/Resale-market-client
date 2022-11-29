@@ -13,7 +13,9 @@ const Dashboardlayout = () => {
 
     const [isAdmin] = useAdmmin(user?.email)
     const [isSeller] = useSeller(user?.email)
+
     const [isBuyer] = useBuyer(user?.email)
+    
 
     return (
         <div>
@@ -30,6 +32,7 @@ const Dashboardlayout = () => {
                     <ul className="menu p-4 w-80 bg-base-100 text-base-content">
 
                         <li><Link to='/dashboard'>My Dashboard</Link></li>
+                        {/* <li><Link to='/dashboard/myorders'>My Orders</Link></li> */}
                        
 
 
