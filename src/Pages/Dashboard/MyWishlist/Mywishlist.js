@@ -1,19 +1,18 @@
-import { async } from '@firebase/util';
 import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import Spiner from '../../components/Spiner/Spiner';
-import AdertisedModal from './AdertisedModal';
-import WishlistModal from './WishlistModal';
+import Spiner from '../../../components/Spiner/Spiner';
+import AdertisedModal from '../../Advertised/AdertisedModal';
 
-const Advertised = () => {
+const Mywishlist = () => {
+
+
     const [currentProduct, seetCurrentProduct] = useState(null)
-    const [currentWishlist, setCurrentWishlist] = useState(null)
-    const { data: products, isLoading, refetch } = useQuery({
-        queryKey: ['porducts'],
+
+    const { data: wishlists, isLoading, refetch } = useQuery({
+        queryKey: ['orders'],
         queryFn: async () => {
             try {
-                const res = await fetch(' http://localhost:5000/advertised/'
+                const res = await fetch('http://localhost:5000/wishlist/'
                     , {
                         headers: {
                             authorization: `bearer ${localStorage.getItem('accessToken')}`
@@ -29,31 +28,19 @@ const Advertised = () => {
         }
     })
 
-    // const [availableOrders, setAvailableOrders] = useState([])
-
-    // const {data: orders=[]} = useQuery({
-    //     queryKey: ['orders'],
-    //     queryFn: async() => {
-    //      const res = await fetch('http://localhost:3000/orders')
-    //      const data = await res.json()
-    //      return data;
-    //     }
-    // })
-
-
-
-    if (isLoading) {
-        return <Spiner></Spiner>
+    if(isLoading){
+        <Spiner></Spiner>
     }
 
 
+
     return (
-        <div className='mt-12'>
+        <div>
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
 
                 {
-                    products &&
-                    products.map(product => <div key={product._id} className="card  bg-base-100 shadow-xl">
+                    wishlists &&
+                    wishlists?.map(product => <div key={product._id} className="card  bg-base-100 shadow-xl">
                         <figure><img className='h-80 w-full object-cover' src={product?.image} alt="Shoes" /></figure>
                         <div className="card-body">
                             <h2 className="card-title">
@@ -79,15 +66,6 @@ const Advertised = () => {
                                     onClick={() => seetCurrentProduct(product)}
 
                                 >Orders</label>
-
-                                <label
-                                    disabled={product?.availableProduct?.length === 0}
-                                    htmlFor="wishlistModal" className="btn btn-outline btn-xs"
-                                    onClick={() => setCurrentWishlist(product)}
-
-                                >Wishlist</label>
-
-
                             </div>
                         </div>
                     </div>)
@@ -99,22 +77,11 @@ const Advertised = () => {
                 currentProduct && <AdertisedModal
                     products={currentProduct}
                     seetCurrentProduct={seetCurrentProduct}
-                // products={currentWishlist}
-                // setCurrentWishlist={setCurrentWishlist}
+               
                 ></AdertisedModal>
-            }
-
-            {
-                currentWishlist && <WishlistModal
-
-                    products={currentWishlist}
-                    setCurrentWishlist={setCurrentWishlist}
-                >
-
-                </WishlistModal>
             }
         </div>
     );
 };
 
-export default Advertised;
+export default Mywishlist;

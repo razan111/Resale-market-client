@@ -50,7 +50,7 @@ const AddProduct = () => {
                 }
 
                 // save product information to the db
-                fetch(' https://resale-portal-server.vercel.app/products', {
+                fetch(' http://localhost:5000/products', {
                     method: "POST",
                     headers: {
                         'content-type': 'application/json',

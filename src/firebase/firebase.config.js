@@ -5,12 +5,12 @@ import { initializeApp } from "firebase/app";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDvORthA65eeniQeB0mMDuG9Sc6atD8wz0",
-  authDomain: "resaleportal-1.firebaseapp.com",
-  projectId: "resaleportal-1",
-  storageBucket: "resaleportal-1.appspot.com",
-  messagingSenderId: "50919792649",
-  appId: "1:50919792649:web:c299f433a9bdfc1f0958d8"
+  apiKey: "AIzaSyDkT-PiQNHF0NRNbTPVQU23n1MhiLoy_78",
+  authDomain: "resale-market-e557b.firebaseapp.com",
+  projectId: "resale-market-e557b",
+  storageBucket: "resale-market-e557b.appspot.com",
+  messagingSenderId: "902451850814",
+  appId: "1:902451850814:web:5d0b62e90949c367876b6f"
 };
 
 // Initialize Firebase

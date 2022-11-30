@@ -8,6 +8,7 @@ import AllUsers from "../pages/Dashboard/AllUsers/AllUsers";
 import MyDashboard from "../pages/Dashboard/MyDashboard/MyDashboard";
 import MyOrders from "../pages/Dashboard/MyOrders/MyOrders";
 import MyProduct from "../pages/Dashboard/MyProduct/MyProduct";
+import Mywishlist from "../pages/Dashboard/MyWishlist/Mywishlist";
 import Payment from "../pages/Dashboard/Payment/Payment";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
 import Home from "../pages/Home/Home/Home";
@@ -48,7 +49,7 @@ export const router = createBrowserRouter([
             // {
             //     path: '/payment/:id',
             //     element: <Payment></Payment>,
-            //     loader: ({params}) => fetch(` https://resale-portal-server.vercel.app/products/${params.id}`)
+            //     loader: ({params}) => fetch(` http://localhost:5000/products/${params.id}`)
             // },
         ]
     },
@@ -72,7 +73,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: '/dashboard/allusers',
-                element: <AdminRoutes><AllUsers/></AdminRoutes>
+                element: <AdminRoutes><AllUsers /></AdminRoutes>
             },
             {
                 path: '/dashboard/myorders',
@@ -81,7 +82,11 @@ export const router = createBrowserRouter([
             {
                 path: '/dashboard/payment/:id',
                 element: <Payment></Payment>,
-                loader: ({params}) => fetch(` https://resale-portal-server.vercel.app/orders/${params.id}`)
+                loader: ({ params }) => fetch(`http://localhost:5000/orders/${params.id}`)
+            },
+            {
+                path: '/dashboard/wishlist',
+                element: <BuyerRoutes><Mywishlist></Mywishlist></BuyerRoutes>
             },
         ]
     },

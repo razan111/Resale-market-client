@@ -1,7 +1,5 @@
 {
   "projects": {
-    "default": "resaleportal-1"
-  },
-  "targets": {},
-  "etags": {}
+    "default": "resale-market-e557b"
+  }
 }

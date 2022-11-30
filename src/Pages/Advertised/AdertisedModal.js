@@ -16,6 +16,7 @@ const AdertisedModal = ({products, seetCurrentProduct}) => {
         const location = form.location.value;
         const email = form.email.value;
         const image = form.image.value;
+        console.log(image)
 
         const ordersProduct = {
             image,
@@ -26,7 +27,7 @@ const AdertisedModal = ({products, seetCurrentProduct}) => {
             email
         }
 
-        fetch(' https://resale-portal-server.vercel.app/orders', {
+        fetch(' http://localhost:5000/orders', {
             method: "POST",
             headers: {
                 'content-type': 'application/json'

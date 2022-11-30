@@ -28,20 +28,20 @@ const Signup = () => {
 
    
     const handleSignup = (data) => {
-        const image = data.image[0]
-        const formData = new FormData()
-        formData.append('image', image)
-        const url = `https://api.imgbb.com/1/upload?key=${imageHostKey}`
+        // const image = data.image[0]
+        // const formData = new FormData()
+        // formData.append('image', image)
+        // const url = `https://api.imgbb.com/1/upload?key=${imageHostKey}`
 
-        fetch(url, {
-            method: "POST",
-            body: formData
-        })
+        // fetch(url, {
+        //     method: "POST",
+        //     body: formData
+        // })
 
-        .then(res => res.json())
-        .then(imgData =>{
-           console.log(imgData)
-        })
+        // .then(res => res.json())
+        // .then(imgData =>{
+        //    console.log(imgData)
+        // })
 
 
         // console.log(data)
@@ -55,7 +55,7 @@ const Signup = () => {
                 const userInfo = {
                     displayName: data.name,
                     allUser: data.allUser,
-                    image: data.url
+                    
                 }
                 updateUser(userInfo)
                     .then(() => {
@@ -71,9 +71,36 @@ const Signup = () => {
     }
 
 
+    
+    const googleProvider = new GoogleAuthProvider()
+
+    // const [signInWithGoogle, guser, loading, error] = useSignInWithGoogle(auth);
+    // console.log('guser', guser)
+ 
+
+    const from = location.state?.from?.pathname || '/'
+
+    const handleGoogleSignIn = () => {
+        googleLogIn(googleProvider)
+            .then(result => {
+                const user = result.user;
+                console.log(user)
+                // const userInfo ={
+                //     email: user.email,
+                //     name: user.displayName,
+                //     allUsers: "Buyer"
+                // }
+                // console.log(userInfo)
+                let allUsers = ''
+                saveUser(user.displayName, user.email, {allUsers: "Buyer"})
+                
+            })
+            .catch(error => console.error(error))
+    }
+
     const saveUser = (name, email, allUsers, image) => {
         const user = { name, email , allUsers, image }
-        fetch(' https://resale-portal-server.vercel.app/users', {
+        fetch('http://localhost:5000/users', {
             method: "POST",
             headers: {
                 'content-type': 'application/json'
@@ -88,24 +115,6 @@ const Signup = () => {
 
    
 
-    // const googleProvider = new GoogleAuthProvider()
-
-    const [signInWithGoogle, guser, loading, error] = useSignInWithGoogle(auth);
-    console.log('guser', guser)
- 
-
-    const from = location.state?.from?.pathname || '/'
-
-    // const handleGoogleSignIn = (data) => {
-    //     googleLogIn(googleProvider)
-    //         .then(result => {
-    //             const user = result.user;
-    //             console.log(user)
-    //             saveUser(data.name, data.email, data.allUsers)
-                
-    //         })
-    //         .catch(error => console.error(error))
-    // }
 
 
     
@@ -180,20 +189,7 @@ const Signup = () => {
                         {errors.allUsers && <p role='alert' className='text-red-500'>{errors.allUsers.message}</p>}
                     </div>
 
-                    {/* image  */}
-                    <div className="form-control w-full max-w-xs">
-                        <label className="label">
-                            <span className="label-text">Photo</span>
-
-                        </label>
-
-                        <input type='file'
-                            {...register("image", { required: 'image is requred' })}
-                            className="file-input file-input-bordered w-full max-w-xs" />
-
-                        {errors.image && <p role='alert' className='text-red-500'>{errors.image.message}</p>}
-
-                    </div>
+                    
 
 
                     <input className='btn btn-accent w-full mt-5' value='Signup' type="submit" />
@@ -204,7 +200,7 @@ const Signup = () => {
 
                 <div className="divider">OR</div>
 
-                <button onClick={() => signInWithGoogle()} className='btn btn-outline w-full'>Continue with google</button>
+                <button onClick={handleGoogleSignIn}  className='btn btn-outline w-full'>Continue with google</button>
             </div>
 
         </div>
