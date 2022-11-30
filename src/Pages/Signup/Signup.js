@@ -6,7 +6,6 @@ import toast from 'react-hot-toast';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { auth, AuthContext } from '../../contexts/AuthProvider/AuthProvider';
 import useToken from '../../hocks/useToken';
-import useUser from '../../hocks/useUser';
 
 const Signup = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -74,7 +73,7 @@ const Signup = () => {
 
     const saveUser = (name, email, allUsers, image) => {
         const user = { name, email , allUsers, image }
-        fetch('http://localhost:5000/users', {
+        fetch(' https://resale-portal-server.vercel.app/users', {
             method: "POST",
             headers: {
                 'content-type': 'application/json'
@@ -93,8 +92,6 @@ const Signup = () => {
 
     const [signInWithGoogle, guser, loading, error] = useSignInWithGoogle(auth);
     console.log('guser', guser)
-
-    const [tokenss] = useUser(guser)
  
 
     const from = location.state?.from?.pathname || '/'
@@ -207,7 +204,7 @@ const Signup = () => {
 
                 <div className="divider">OR</div>
 
-                <button onClick={() => signInWithGoogle(tokenss)} className='btn btn-outline w-full'>Continue with google</button>
+                <button onClick={() => signInWithGoogle()} className='btn btn-outline w-full'>Continue with google</button>
             </div>
 
         </div>
