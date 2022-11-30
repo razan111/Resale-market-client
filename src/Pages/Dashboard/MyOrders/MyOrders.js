@@ -17,7 +17,7 @@ const MyOrders = () => {
         queryKey: ['orders'],
         queryFn: async () => {
             try {
-                const res = await fetch('http://localhost:5000/orders/'
+                const res = await fetch('https://resale-portal-server.vercel.app/orders/'
                     , {
                         headers: {
                             authorization: `bearer ${localStorage.getItem('accessToken')}`
@@ -35,7 +35,7 @@ const MyOrders = () => {
 
     const handleDeleteUser = (orders) =>{
         // console.log(user)
-        fetch(` http://localhost:5000/orders/${orders._id}`, {
+        fetch(`https://resale-portal-server.vercel.app/orders/${orders._id}`, {
             method: "DELETE",
             headers: {
                 authorization: `bearer ${localStorage.getItem('accessToken')}`
@@ -46,7 +46,7 @@ const MyOrders = () => {
 
             if(data.deletedCount > 0){
                 console.log(data)
-                toast.success(`Deleted ${orders.productName} successfully`)
+                toast.success(`Deleted ${orders?.productName} successfully`)
                 refetch()
             }
             
@@ -82,34 +82,34 @@ const MyOrders = () => {
 
 
                         {
-                            orders && orders.map((order, i) => <tr key={order._id}>
+                            orders && orders?.map((order, i) => <tr key={order._id}>
                                 <td>{i+1}</td>
                                 <td>
                                     <div className="flex items-center space-x-3">
                                         <div className="avatar">
                                             <div className="mask mask-squircle w-12 h-12">
-                                                <img src={order.image} alt="Avatar Tailwind CSS Component" />
+                                                <img src={order?.image} alt="Avatar Tailwind CSS Component" />
                                             </div>
                                         </div>
                                         <div>
                                             <div className="font-bold"></div>
-                                            <div className="text-sm opacity-50">{order.email}</div>
+                                            <div className="text-sm opacity-50">{order?.email}</div>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                {order.productName}
+                                {order?.productName}
                                     <br />
-                                    <span className="badge badge-ghost badge-sm">{order.price}</span>
+                                    <span className="badge badge-ghost badge-sm">{order?.price}</span>
                                 </td>
                                 <td>
                                     {
-                                        order.price && !order.paid && <Link to={`/dashboard/payment/${order._id}`}>
+                                        order?.price && !order?.paid && <Link to={`/dashboard/payment/${order._id}`}>
                                         <button className='btn btn-xs'>Pay</button>
                                         </Link>
                                     }
                                     {
-                                        order.price && order.paid && <span className='text-green-600'>Paid</span>
+                                        order?.price && order?.paid && <span className='text-green-600'>Paid</span>
                                     }
                                 </td>
                                 <th>

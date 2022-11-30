@@ -8,11 +8,11 @@ const Mywishlist = () => {
 
     const [currentProduct, seetCurrentProduct] = useState(null)
 
-    const { data: wishlists, isLoading, refetch } = useQuery({
+    const { data: wishlists = [], isLoading, refetch } = useQuery({
         queryKey: ['orders'],
         queryFn: async () => {
             try {
-                const res = await fetch('http://localhost:5000/wishlist/'
+                const res = await fetch('https://resale-portal-server.vercel.app/wishlist/'
                     , {
                         headers: {
                             authorization: `bearer ${localStorage.getItem('accessToken')}`
@@ -36,6 +36,7 @@ const Mywishlist = () => {
 
     return (
         <div>
+            {wishlists.length}
             <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
 
                 {
@@ -47,7 +48,7 @@ const Mywishlist = () => {
                                 {product?.productName}
                                 <div className="badge badge-secondary">{product?.conditionType}</div>
                             </h2>
-                            <p>If a dog chews shoes whose shoes does he choose?</p>
+                            <p>{product.description}</p>
 
                             <div className="card-actions justify-between">
                                 <h2>Price: {product?.price}</h2>
@@ -59,27 +60,12 @@ const Mywishlist = () => {
                             </div>
                             <div className="card-actions justify-end">
 
-
-                                <label
-                                    disabled={product?.availableProduct?.length === 0}
-                                    htmlFor="advertisedModal" className="btn btn-outline btn-xs"
-                                    onClick={() => seetCurrentProduct(product)}
-
-                                >Orders</label>
                             </div>
                         </div>
                     </div>)
                 }
 
             </div>
-
-            {
-                currentProduct && <AdertisedModal
-                    products={currentProduct}
-                    seetCurrentProduct={seetCurrentProduct}
-               
-                ></AdertisedModal>
-            }
         </div>
     );
 };

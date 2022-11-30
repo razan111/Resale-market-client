@@ -28,7 +28,7 @@ const WishlistModal = ({products, setCurrentWishlist}) => {
             email
         }
 
-        fetch('http://localhost:5000/wishlist', {
+        fetch('https://resale-portal-server.vercel.app/wishlist', {
             method: "POST",
             headers: {
                 'content-type': 'application/json'

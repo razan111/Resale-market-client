@@ -13,7 +13,7 @@ const Advertised = () => {
         queryKey: ['porducts'],
         queryFn: async () => {
             try {
-                const res = await fetch(' http://localhost:5000/advertised/'
+                const res = await fetch(' https://resale-portal-server.vercel.app/advertised/'
                     , {
                         headers: {
                             authorization: `bearer ${localStorage.getItem('accessToken')}`
@@ -60,7 +60,7 @@ const Advertised = () => {
                                 {product?.productName}
                                 <div className="badge badge-secondary">{product?.conditionType}</div>
                             </h2>
-                            <p>If a dog chews shoes whose shoes does he choose?</p>
+                            <p>{product?.description}</p>
 
                             <div className="card-actions justify-between">
                                 <h2>Price: {product?.price}</h2>

@@ -28,23 +28,7 @@ const Signup = () => {
 
    
     const handleSignup = (data) => {
-        // const image = data.image[0]
-        // const formData = new FormData()
-        // formData.append('image', image)
-        // const url = `https://api.imgbb.com/1/upload?key=${imageHostKey}`
-
-        // fetch(url, {
-        //     method: "POST",
-        //     body: formData
-        // })
-
-        // .then(res => res.json())
-        // .then(imgData =>{
-        //    console.log(imgData)
-        // })
-
-
-        // console.log(data)
+        
         setSignUpError('')
         console.error(errors)
         createUser(data.email, data.password)
@@ -85,22 +69,15 @@ const Signup = () => {
             .then(result => {
                 const user = result.user;
                 console.log(user)
-                // const userInfo ={
-                //     email: user.email,
-                //     name: user.displayName,
-                //     allUsers: "Buyer"
-                // }
-                // console.log(userInfo)
-                let allUsers = ''
-                saveUser(user.displayName, user.email, {allUsers: "Buyer"})
+                saveUser(user.displayName, user.email)
                 
             })
             .catch(error => console.error(error))
     }
 
-    const saveUser = (name, email, allUsers, image) => {
-        const user = { name, email , allUsers, image }
-        fetch('http://localhost:5000/users', {
+    const saveUser = (name, email, allUsers = "Buyer") => {
+        const user = { name, email , allUsers }
+        fetch('https://resale-portal-server.vercel.app/users', {
             method: "POST",
             headers: {
                 'content-type': 'application/json'
@@ -112,13 +89,6 @@ const Signup = () => {
                 setCreatedUserEmail(email)
             })
     }
-
-   
-
-
-
-    
-
 
 
     return (

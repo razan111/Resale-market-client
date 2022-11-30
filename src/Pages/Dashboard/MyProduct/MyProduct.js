@@ -14,7 +14,7 @@ const MyProduct = () => {
         queryKey: ['porducts'],
         queryFn: async () =>{
             try{
-                const res = await fetch(` http://localhost:5000/products/email${email}`
+                const res = await fetch(` https://resale-portal-server.vercel.app/products/email${email}`
                 , {
                     headers: {
                         authorization: `bearer ${localStorage.getItem('accessToken')}`
@@ -33,7 +33,7 @@ const MyProduct = () => {
 
     const handleAdvertise = (id) =>{
       console.log(id)
-      fetch(` http://localhost:5000/products/seller/${id}`,{
+      fetch(` https://resale-portal-server.vercel.app/products/seller/${id}`,{
         method: "PUT",
         headers: {
           authorization: `bearer ${localStorage.getItem('accessToken')}`

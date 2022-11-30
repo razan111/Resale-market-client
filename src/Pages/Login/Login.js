@@ -5,23 +5,53 @@ import { auth, AuthContext } from '../../contexts/AuthProvider/AuthProvider';
 import useToken from '../../hocks/useToken';
 
 
-import {useSignInWithGoogle} from 'react-firebase-hooks/auth'
+import { useSignInWithGoogle } from 'react-firebase-hooks/auth'
+import { GoogleAuthProvider } from 'firebase/auth';
 
 const Login = () => {
 
 
+    const [createdUserEmail, setCreatedUserEmail] = useState('')
+
     const { register, handleSubmit, formState: { errors } } = useForm();
 
 
-    const {logIn, googleLogIn} = useContext(AuthContext)
+    const { logIn, googleLogIn } = useContext(AuthContext)
 
-    const handleGoogleLogIn = () =>{
-        googleLogIn()
+    const googleProvider = new GoogleAuthProvider()
+
+
+    const handleGoogleLogIn = () => {
+        googleLogIn(googleProvider)
+            .then(result => {
+                const user = result.user;
+                console.log(user)
+                saveUser(user.displayName, user.email)
+
+            })
+            .catch(error => console.error(error))
+    }
+
+    const saveUser = (name, email, allUsers = "Buyer") => {
+        const user = { name, email, allUsers }
+        fetch('https://resale-portal-server.vercel.app/users', {
+            method: "POST",
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        })
+            .then(res => res.json())
+            .then(data => {
+                navigate(from, { replace: true })
+                setCreatedUserEmail(email)
+            })
     }
 
 
+
     // last google login
-    const [signInWithGoogle, guser, loading, error] = useSignInWithGoogle(auth);
+    // const [signInWithGoogle, guser, loading, error] = useSignInWithGoogle(auth);
 
     const [loginError, setLoginError] = useState('')
     const [logInUserEmail, setLogInUserEmail] = useState('')
@@ -29,30 +59,32 @@ const Login = () => {
     const location = useLocation()
     const navigate = useNavigate()
 
-    console.log(`Google User: ${guser}`)
+    // console.log(`Google User: ${guser}`)
+
+
+
+
+    const handleLogin = data => {
+        console.log(data)
+        setLoginError('')
+
+        logIn(data.email, data.password)
+            .then(result => {
+                const user = result.user
+                console.log(user)
+                setLogInUserEmail(data.email)
+
+            })
+            .catch(err => {
+                console.error(err.message)
+                setLoginError(err.message)
+            })
+    }
 
     const from = location.state?.from?.pathname || '/'
 
-    if(token){
-        navigate(from, {replace: true})
-    }
-
-
-    const handleLogin = data =>{
-        console.log(data)
-        setLoginError('')
-        
-        logIn(data.email, data.password)
-        .then(result => {
-            const user = result.user
-            console.log(user)
-            setLogInUserEmail(data.email)
-           
-        })
-        .catch(err => {
-            console.error(err.message)
-            setLoginError(err.message)
-        })
+    if (token) {
+        navigate(from, { replace: true })
     }
 
 
@@ -64,7 +96,7 @@ const Login = () => {
                 <h2 className='text-2xl text-center'>Login</h2>
 
                 <form onSubmit={handleSubmit(handleLogin)}>
-                   
+
 
                     <div className="form-control w-full max-w-xs">
                         <label className="label">
@@ -108,7 +140,7 @@ const Login = () => {
 
                 <div className="divider">OR</div>
 
-                <button onClick={() =>signInWithGoogle()} className='btn btn-outline w-full'>Continue with google</button>
+                <button onClick={handleGoogleLogIn} className='btn btn-outline w-full'>Continue with google</button>
             </div>
 
         </div>
