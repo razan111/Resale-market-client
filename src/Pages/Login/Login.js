@@ -1,8 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../contexts/AuthProvider/AuthProvider';
+import { auth, AuthContext } from '../../contexts/AuthProvider/AuthProvider';
 import useToken from '../../hocks/useToken';
+
+
+import {useSignInWithGoogle} from 'react-firebase-hooks/auth'
 
 const Login = () => {
 
@@ -12,11 +15,21 @@ const Login = () => {
 
     const {logIn, googleLogIn} = useContext(AuthContext)
 
+    const handleGoogleLogIn = () =>{
+        googleLogIn()
+    }
+
+
+    // last google login
+    const [signInWithGoogle, guser, loading, error] = useSignInWithGoogle(auth);
+
     const [loginError, setLoginError] = useState('')
     const [logInUserEmail, setLogInUserEmail] = useState('')
     const [token] = useToken(logInUserEmail)
     const location = useLocation()
     const navigate = useNavigate()
+
+    console.log(`Google User: ${guser}`)
 
     const from = location.state?.from?.pathname || '/'
 
@@ -95,7 +108,7 @@ const Login = () => {
 
                 <div className="divider">OR</div>
 
-                <button className='btn btn-outline w-full'>Continue with google</button>
+                <button onClick={() =>signInWithGoogle()} className='btn btn-outline w-full'>Continue with google</button>
             </div>
 
         </div>

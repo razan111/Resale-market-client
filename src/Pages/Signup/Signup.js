@@ -1,10 +1,12 @@
 import { GoogleAuthProvider } from 'firebase/auth';
 import React, { useContext, useState } from 'react';
+import { useSignInWithGoogle } from 'react-firebase-hooks/auth';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../../contexts/AuthProvider/AuthProvider';
+import { auth, AuthContext } from '../../contexts/AuthProvider/AuthProvider';
 import useToken from '../../hocks/useToken';
+import useUser from '../../hocks/useUser';
 
 const Signup = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
@@ -24,6 +26,8 @@ const Signup = () => {
         navigate('/')
     }
 
+
+   
     const handleSignup = (data) => {
         const image = data.image[0]
         const formData = new FormData()
@@ -83,21 +87,28 @@ const Signup = () => {
             })
     }
 
-    const googleProvider = new GoogleAuthProvider()
+   
+
+    // const googleProvider = new GoogleAuthProvider()
+
+    const [signInWithGoogle, guser, loading, error] = useSignInWithGoogle(auth);
+    console.log('guser', guser)
+
+    const [tokenss] = useUser(guser)
  
 
     const from = location.state?.from?.pathname || '/'
 
-    const handleGoogleSignIn = (data) => {
-        googleLogIn(googleProvider)
-            .then(result => {
-                const user = result.user;
-                console.log(user)
-                saveUser(data.name, data.email, data.allUsers)
+    // const handleGoogleSignIn = (data) => {
+    //     googleLogIn(googleProvider)
+    //         .then(result => {
+    //             const user = result.user;
+    //             console.log(user)
+    //             saveUser(data.name, data.email, data.allUsers)
                 
-            })
-            .catch(error => console.error(error))
-    }
+    //         })
+    //         .catch(error => console.error(error))
+    // }
 
 
     
@@ -196,7 +207,7 @@ const Signup = () => {
 
                 <div className="divider">OR</div>
 
-                <button onClick={handleGoogleSignIn} className='btn btn-outline w-full'>Continue with google</button>
+                <button onClick={() => signInWithGoogle(tokenss)} className='btn btn-outline w-full'>Continue with google</button>
             </div>
 
         </div>
